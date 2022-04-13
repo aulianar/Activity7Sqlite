@@ -30,28 +30,28 @@ public class DBController extends SQLiteOpenHelper {
 
     }
 
-    public void insertData(HashMap<String, String> queryValues) {
+    public void insertData(HashMap<String,String> queryValues){
         SQLiteDatabase basisdata = this.getWritableDatabase();
         ContentValues nilai = new ContentValues();
-        nilai.put("nama", queryValues.get("nama"));
-        nilai.put("telpon", queryValues.get("telpon"));
-        basisdata.insert("teman", null, nilai);
+        nilai.put("nama",queryValues.get("nama"));
+        nilai.put("telpon",queryValues.get("telpon"));
+        basisdata.insert("teman", null,nilai);
         basisdata.close();
     }
 
-    public ArrayList<HashMap<String, String>> getAllTeman() {
-        ArrayList<HashMap<String, String>> daftarTeman;
-        daftarTeman = new ArrayList<HashMap<String, String>>();
+    public ArrayList<HashMap<String,String>> getAllTeman(){
+        ArrayList<HashMap<String,String>> daftarTeman;
+        daftarTeman = new ArrayList<HashMap<String,String>>();
         String selectQuery = "Select * from teman";
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db =this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        if (cursor.moveToFirst()) {
-            do {
-                HashMap<String, String> map = new HashMap<>();
+        if (cursor.moveToFirst()){
+            do{
+                HashMap<String,String> map = new HashMap<>();
                 map.put("id", cursor.getString(0));
-                map.put("nama", cursor.getString(1));
-                map.put("telpon", cursor.getString(2));
+                map.put("nama",cursor.getString(1));
+                map.put("telpon",cursor.getString(2));
                 daftarTeman.add(map);
 
             } while (cursor.moveToNext());
@@ -59,5 +59,20 @@ public class DBController extends SQLiteOpenHelper {
         }
         db.close();
         return daftarTeman;
+    }
+
+    public void UpdateData(HashMap<String,String> queryValue){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues nilai = new ContentValues();
+        nilai.put("nama", queryValue.get("nama"));
+        nilai.put("telpon", queryValue.get("telpon"));
+        db.update("teman",nilai,"id=?",new String[]{queryValue.get("id")});
+        db.close();
+    }
+
+    public void DeleteData(HashMap<String,String> queryValue){
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("teman","id=?", new String[]{queryValue.get("id")});
+
     }
 }
